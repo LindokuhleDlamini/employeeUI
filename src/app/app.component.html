@@ -1,0 +1,167 @@
+<div class="row">
+    <div class="col align-center"><h1>Current Employees</h1></div>
+    
+
+    <div class="col"><button (click)="add()" class="btn btn-secondary">Add Employee</button></div>
+</div>
+
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="width: 30%">Employee #</th>
+                <th style="width: 30%">First Name</th>
+                <th style="width: 30%">Last Name</th>
+                <th style="width: 30%">Salutation</th>
+                <th style="width: 30%">Profile Colour</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let employee of employees" [style.background-color]="employee.colour" (click) ="onSelection(employee)">
+                <td>{{employee.employeeNumber}}</td>
+                <td>{{employee.firstNames}}</td>
+                <td>{{employee.lastName}}</td>
+                <td>{{employee.salutation}}</td>
+                <td>{{employee.colour}}</td>
+            </tr>
+            <tr *ngIf="!employees">
+                <td colspan="4" class="text-center">
+                    <span class="spinner-border spinner-border-lg align-center"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <form [formGroup]="form" >
+        <h1>employee Information</h1>
+        
+        <div class="mb-3">
+            <button (click)="onSubmit()" class="btn btn-primary">
+                Save
+            </button>
+            <button (click) = "cancel()" class="btn btn-secondary">Cancel</button>
+        </div>
+    
+        <div class="row">
+            <div class="mb-3 col">
+
+                <label class="form-label">First Name</label>
+                <input type="text" formControlName="firstNames" class="form-control" [ngClass]="{ 'is-invalid': submitted && firstNames!.errors }" />
+                
+                <div *ngIf="submitted && firstNames!.errors" class="invalid-feedback">
+                    <div *ngIf="firstNames!.errors?.['required']">First Name is required</div>
+                </div>
+
+            </div>
+            <div class="mb-3 col">
+                <label class="form-label">Full Name</label>
+                <input type="text" [disabled]="true" formControlName="fullName" class="form-control" [ngClass]="{ 'is-invalid': submitted && fullName!.errors }"/>
+                    
+                <div *ngIf="submitted && fullName!.errors" class="invalid-feedback">
+                    <div *ngIf="fullName!.errors?.['required']">Full Name is required</div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="mb-3 col">
+                <label class="form-label">Last Name</label>
+                <input type="text" formControlName="lastName" class="form-control" [ngClass]="{ 'is-invalid': submitted && lastName!.errors }" />
+                
+                <div *ngIf="submitted && lastName!.errors" class="invalid-feedback">
+                    <div *ngIf="lastName!.errors?.['required']">Last Name is required</div>
+                </div>
+            </div>
+            <div class="mb-3 col">
+                <label class="form-label">Grosss Salary $PY</label>
+                <input type="text" formControlName="grossSalary" class="form-control" [ngClass]="{ 'is-invalid': submitted && grossSalary!.errors }" />
+                
+                <div *ngIf="submitted && grossSalary!.errors" class="invalid-feedback">
+                    <div *ngIf="grossSalary!.errors?.['required']">Grosss Salary is required</div>
+                    <div *ngIf="!grossSalary!.errors?.['required']">Grosss Salary requires a numeric value</div>
+                </div>
+            </div>
+        </div>
+    
+         <div class="row">
+            <div class="mb-3 col">
+                <label class="form-label">Salutation </label>
+                <div class="row">
+                    <select class="custom-select col" (change)="changeSalutation($event)" formControlName="salutation">
+                        <option *ngFor="let title of salutations" [ngValue]="title">{{title}}</option>
+                      </select>
+                      <div class="invalid-feedback col" *ngIf="submitted && salutation!.errors">
+                        <div  *ngIf="salutation!.errors?.['required']"><sup>*</sup>Please enter your title</div>
+                      </div>
+                </div>
+               
+            </div>     
+    
+            <div class="mb-3 col">
+                <label class="form-label">Employee Profile Colour</label>
+                <div class="row">
+                    <div class="custom-control custom-radio col">
+                        <input id="male" type="radio" class="custom-control-input" value="green" name="colour" formControlName="colour">
+                        <label class="custom-control-label" for="green">Green</label>
+                    </div>
+        
+                    <div class="custom-control custom-select col">
+                        <input id="female" type="radio" class="custom-control-input" value="blue" name="colour" formControlName="colour">
+                        <label class="custom-control-label" for="blue">Blue</label>
+                    </div>
+    
+                    <div class="custom-control custom-select col">
+                        <input id="female" type="radio" class="custom-control-input" value="red" name="colour" formControlName="colour">
+                        <label class="custom-control-label" for="red">Red</label>
+                    </div>
+
+                    <div class="custom-control custom-select col">
+                        <input id="female" type="radio" class="custom-control-input" value="default" name="colour" formControlName="colour">
+                        <label class="custom-control-label" for="default">Default</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="row">
+            <div class="mb-3 col">
+                <label class="form-label">Gender</label>
+                <div class="row">
+                    <div class="custom-control custom-radio col">
+                        <input id="male" type="radio" class="custom-control-input" value="male" name="gender" formControlName="gender">
+                        <label class="custom-control-label" for="male">Male</label>
+                    </div>
+        
+                    <div class="custom-control custom-radio col">
+                        <input id="female" type="radio" class="custom-control-input" value="female" name="gender" formControlName="gender">
+                        <label class="custom-control-label" for="female">Female</label>
+                    </div>
+    
+                    <div class="custom-control custom-radio col">
+                        <input id="female" type="radio" class="custom-control-input" value="unspecified" name="gender" formControlName="gender">
+                        <label class="custom-control-label" for="unspecified">Unspecified</label>
+                    </div>
+                </div>
+    
+                <div *ngIf="submitted && gender!.errors" class="invalid-feedback">
+                    <p *ngIf="gender!.errors?.['required']">Please select your gender</p>
+                </div>
+            </div>
+            <div class="mb-3 col"></div>
+        </div>
+    
+        <div class="row">
+            <div class="mb-3 col">
+                <label class="form-label">employee #</label>
+                <input type="text" formControlName="employeeNumber" class="form-control" [ngClass]="{ 'is-invalid': submitted && employeeNumber!.errors }" />
+                <div *ngIf="submitted && employeeNumber!.errors" class="invalid-feedback">
+                    <div *ngIf="employeeNumber!.errors?.['required']">Employee # is required</div>
+                    <div *ngIf="!grossSalary!.errors?.['required']">Employee # requires a numeric value</div>
+                </div>
+            </div>
+            <div class="mb-3 col"></div>
+        </div>
+    </form>
+</div>
